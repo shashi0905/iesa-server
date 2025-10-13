@@ -94,7 +94,7 @@ management:
 logging:
   level:
     root: INFO
-    com.company.iesa: DEBUG
+    com.technogise.iesa: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
@@ -172,6 +172,6 @@ spring:
 logging:
   level:
     root: WARN
-    com.company.iesa: INFO
+    com.technogise.iesa: INFO
     org.springframework.security: WARN
     org.hibernate.SQL: WARN

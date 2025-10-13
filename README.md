@@ -375,7 +375,7 @@ src/main/java/com/company/iesa/
 
 To add a new module (e.g., Expense Management):
 
-1. Create package: `com.company.iesa.expensemanagement`
+1. Create package: `com.technogise.iesa.expensemanagement`
 2. Follow same structure: `domain`, `repository`, `service`, `dto`, `controller`
 3. Create Flyway migration for new tables
 4. Add module-specific configuration if needed
