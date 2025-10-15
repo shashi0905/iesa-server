@@ -235,8 +235,8 @@ class WorkflowHistoryServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getFromStatus()).isEqualTo(fromStatus);
-        assertThat(result.getToStatus()).isEqualTo(toStatus);
+        assertThat(result.getFromStatus()).isEqualTo(fromStatus.name());
+        assertThat(result.getToStatus()).isEqualTo(toStatus.name());
         assertThat(result.getComment()).isEqualTo(comment);
         verify(historyRepository, times(1)).save(any(WorkflowHistory.class));
         verify(mapper, times(1)).toDto(history);

@@ -7,6 +7,7 @@ import com.technogise.iesa.segmentmanagement.dto.SegmentDto;
 import com.technogise.iesa.segmentmanagement.dto.SegmentMapper;
 import com.technogise.iesa.segmentmanagement.dto.UpdateSegmentRequest;
 import com.technogise.iesa.segmentmanagement.repository.SegmentRepository;
+import com.technogise.iesa.shared.exception.DuplicateResourceException;
 import com.technogise.iesa.shared.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -187,7 +188,7 @@ class SegmentServiceTest {
 
         // Act & Assert
         assertThatThrownBy(() -> segmentService.createSegment(createRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(DuplicateResourceException.class)
                 .hasMessageContaining("already exists");
 
         verify(segmentRepository, times(1)).existsByCode("ENG-001");
