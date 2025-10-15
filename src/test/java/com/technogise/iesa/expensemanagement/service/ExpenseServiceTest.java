@@ -116,7 +116,7 @@ class ExpenseServiceTest {
                 .totalAmount(new BigDecimal("1000.00"))
                 .currency("USD")
                 .description("Test expense")
-                .status(ExpenseStatus.DRAFT)
+                .status(ExpenseStatus.DRAFT.name())
                 .build();
 
         SegmentAllocationRequest allocationRequest = SegmentAllocationRequest.builder()
@@ -187,7 +187,7 @@ class ExpenseServiceTest {
                 .hasMessageContaining("Expense not found with id");
 
         verify(expenseRepository, times(1)).findById(expenseId);
-        verify(expenseMapper, never()).toDto(any());
+        verify(expenseMapper, never()).toDto(any(Expense.class));
     }
 
     @Test
@@ -222,7 +222,7 @@ class ExpenseServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getStatus()).isEqualTo(ExpenseStatus.DRAFT);
+        assertThat(result.get(0).getStatus()).isEqualTo(ExpenseStatus.DRAFT.name());
         verify(expenseRepository, times(1)).findByStatus(ExpenseStatus.DRAFT);
     }
 
@@ -230,7 +230,7 @@ class ExpenseServiceTest {
     void getPendingApprovals_ShouldReturnPendingExpenses() {
         // Arrange
         expense.setStatus(ExpenseStatus.SUBMITTED);
-        expenseDto.setStatus(ExpenseStatus.SUBMITTED);
+        expenseDto.setStatus(ExpenseStatus.SUBMITTED.name());
         List<Expense> expenses = Arrays.asList(expense);
         List<ExpenseDto> expenseDtos = Arrays.asList(expenseDto);
 
