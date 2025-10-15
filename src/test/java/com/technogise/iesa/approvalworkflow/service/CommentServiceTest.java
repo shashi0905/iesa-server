@@ -146,7 +146,7 @@ class CommentServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).isInternal()).isFalse();
+        assertThat(result.get(0).getIsInternal()).isFalse();
         verify(commentRepository, times(1)).findExternalCommentsByExpenseId(expenseId);
     }
 
@@ -154,7 +154,7 @@ class CommentServiceTest {
     void getInternalCommentsForExpense_ShouldReturnOnlyInternalComments() {
         // Arrange
         comment.setIsInternal(true);
-        commentDto.setInternal(true);
+        commentDto.setIsInternal(true);
         List<Comment> comments = Arrays.asList(comment);
         List<CommentDto> commentDtos = Arrays.asList(commentDto);
 
@@ -166,7 +166,7 @@ class CommentServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).isInternal()).isTrue();
+        assertThat(result.get(0).getIsInternal()).isTrue();
         verify(commentRepository, times(1)).findInternalCommentsByExpenseId(expenseId);
     }
 
@@ -197,7 +197,7 @@ class CommentServiceTest {
                 .hasMessageContaining("Comment not found with id");
 
         verify(commentRepository, times(1)).findById(commentId);
-        verify(mapper, never()).toDto(any());
+        verify(mapper, never()).toDto(any(Comment.class));
     }
 
     @Test
@@ -258,7 +258,7 @@ class CommentServiceTest {
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.isInternal()).isTrue();
+        assertThat(result.getIsInternal()).isTrue();
         verify(commentRepository, times(1)).save(any(Comment.class));
     }
 

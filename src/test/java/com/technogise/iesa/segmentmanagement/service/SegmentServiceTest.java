@@ -62,7 +62,7 @@ class SegmentServiceTest {
                 .name("Engineering")
                 .code("ENG-001")
                 .description("Engineering Department")
-                .segmentType(SegmentType.COST_CENTER)
+                .segmentType(SegmentType.COST_CENTER.name())
                 .isActive(true)
                 .displayOrder(1)
                 .build();
@@ -85,10 +85,9 @@ class SegmentServiceTest {
     void getAllSegments_ShouldReturnAllSegments() {
         // Arrange
         List<Segment> segments = Arrays.asList(segment);
-        List<SegmentDto> segmentDtos = Arrays.asList(segmentDto);
 
         when(segmentRepository.findAllNotDeleted()).thenReturn(segments);
-        when(segmentMapper.toDtoList(segments)).thenReturn(segmentDtos);
+        when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
 
         // Act
         List<SegmentDto> result = segmentService.getAllSegments();
@@ -97,25 +96,25 @@ class SegmentServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getName()).isEqualTo("Engineering");
         verify(segmentRepository, times(1)).findAllNotDeleted();
-        verify(segmentMapper, times(1)).toDtoList(segments);
+        verify(segmentMapper, times(1)).toDto(segment);
     }
 
     @Test
     void getAllActiveSegments_ShouldReturnOnlyActiveSegments() {
         // Arrange
         List<Segment> segments = Arrays.asList(segment);
-        List<SegmentDto> segmentDtos = Arrays.asList(segmentDto);
 
         when(segmentRepository.findAllActive()).thenReturn(segments);
-        when(segmentMapper.toDtoList(segments)).thenReturn(segmentDtos);
+        when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
 
         // Act
         List<SegmentDto> result = segmentService.getAllActiveSegments();
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).isActive()).isTrue();
+        assertThat(result.get(0).getIsActive()).isTrue();
         verify(segmentRepository, times(1)).findAllActive();
+        verify(segmentMapper, times(1)).toDto(segment);
     }
 
     @Test
@@ -228,7 +227,7 @@ class SegmentServiceTest {
     @Test
     void activateSegment_WhenExists_ShouldActivate() {
         // Arrange
-        segment.deactivate();
+        segment.setIsActive(false);
         when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
         when(segmentRepository.save(segment)).thenReturn(segment);
         when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
@@ -262,34 +261,34 @@ class SegmentServiceTest {
     void getSegmentsByType_ShouldReturnSegmentsOfType() {
         // Arrange
         List<Segment> segments = Arrays.asList(segment);
-        List<SegmentDto> segmentDtos = Arrays.asList(segmentDto);
 
         when(segmentRepository.findBySegmentType(SegmentType.COST_CENTER)).thenReturn(segments);
-        when(segmentMapper.toDtoList(segments)).thenReturn(segmentDtos);
+        when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
 
         // Act
         List<SegmentDto> result = segmentService.getSegmentsByType(SegmentType.COST_CENTER);
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getSegmentType()).isEqualTo(SegmentType.COST_CENTER);
+        assertThat(result.get(0).getSegmentType()).isEqualTo(SegmentType.COST_CENTER.name());
         verify(segmentRepository, times(1)).findBySegmentType(SegmentType.COST_CENTER);
+        verify(segmentMapper, times(1)).toDto(segment);
     }
 
     @Test
     void searchSegments_ShouldReturnMatchingSegments() {
         // Arrange
         List<Segment> segments = Arrays.asList(segment);
-        List<SegmentDto> segmentDtos = Arrays.asList(segmentDto);
 
-        when(segmentRepository.searchByNameOrCode("Eng")).thenReturn(segments);
-        when(segmentMapper.toDtoList(segments)).thenReturn(segmentDtos);
+        when(segmentRepository.searchSegments("Eng")).thenReturn(segments);
+        when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
 
         // Act
         List<SegmentDto> result = segmentService.searchSegments("Eng");
 
         // Assert
         assertThat(result).hasSize(1);
-        verify(segmentRepository, times(1)).searchByNameOrCode("Eng");
+        verify(segmentRepository, times(1)).searchSegments("Eng");
+        verify(segmentMapper, times(1)).toDto(segment);
     }
 }

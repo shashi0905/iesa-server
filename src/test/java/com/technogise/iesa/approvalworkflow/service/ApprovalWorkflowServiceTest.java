@@ -163,7 +163,7 @@ class ApprovalWorkflowServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).isActive()).isTrue();
+        assertThat(result.get(0).getIsActive()).isTrue();
         verify(workflowRepository, times(1)).findAllActive();
     }
 
@@ -194,7 +194,7 @@ class ApprovalWorkflowServiceTest {
                 .hasMessageContaining("Workflow not found with id");
 
         verify(workflowRepository, times(1)).findById(workflowId);
-        verify(mapper, never()).toDto(any());
+        verify(mapper, never()).toDto(any(ApprovalWorkflow.class));
     }
 
     @Test
@@ -432,7 +432,7 @@ class ApprovalWorkflowServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).isMandatory()).isTrue();
+        assertThat(result.get(0).getIsMandatory()).isTrue();
         verify(stepRepository, times(1)).findMandatoryStepsByWorkflowId(workflowId);
     }
 

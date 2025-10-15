@@ -86,8 +86,8 @@ class WorkflowHistoryServiceTest {
         historyDto = WorkflowHistoryDto.builder()
                 .id(historyId)
                 .expenseId(expenseId)
-                .fromStatus(ExpenseStatus.SUBMITTED)
-                .toStatus(ExpenseStatus.APPROVED)
+                .fromStatus(ExpenseStatus.SUBMITTED.name())
+                .toStatus(ExpenseStatus.APPROVED.name())
                 .actorId(actorId)
                 .actorName("Approver User")
                 .comment("Approved by manager")
@@ -110,8 +110,8 @@ class WorkflowHistoryServiceTest {
         // Assert
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getExpenseId()).isEqualTo(expenseId);
-        assertThat(result.get(0).getFromStatus()).isEqualTo(ExpenseStatus.SUBMITTED);
-        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.APPROVED);
+        assertThat(result.get(0).getFromStatus()).isEqualTo(ExpenseStatus.SUBMITTED.name());
+        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.APPROVED.name());
         verify(historyRepository, times(1)).findByExpenseIdOrderByTimestampDesc(expenseId);
         verify(mapper, times(1)).toHistoryDtoList(histories);
     }
@@ -161,7 +161,7 @@ class WorkflowHistoryServiceTest {
                 .hasMessageContaining("No history found for expense");
 
         verify(historyRepository, times(1)).findLatestByExpenseId(expenseId);
-        verify(mapper, never()).toDto(any());
+        verify(mapper, never()).toDto(any(WorkflowHistory.class));
     }
 
     @Test
@@ -178,7 +178,7 @@ class WorkflowHistoryServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.APPROVED);
+        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.APPROVED.name());
         verify(historyRepository, times(1)).findApprovalTransitions();
     }
 
@@ -198,8 +198,8 @@ class WorkflowHistoryServiceTest {
         WorkflowHistoryDto rejectionDto = WorkflowHistoryDto.builder()
                 .id(rejectionHistory.getId())
                 .expenseId(expenseId)
-                .fromStatus(ExpenseStatus.SUBMITTED)
-                .toStatus(ExpenseStatus.REJECTED)
+                .fromStatus(ExpenseStatus.SUBMITTED.name())
+                .toStatus(ExpenseStatus.REJECTED.name())
                 .actorId(actorId)
                 .comment("Rejected due to insufficient documentation")
                 .timestamp(Instant.now())
@@ -216,7 +216,7 @@ class WorkflowHistoryServiceTest {
 
         // Assert
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.REJECTED);
+        assertThat(result.get(0).getToStatus()).isEqualTo(ExpenseStatus.REJECTED.name());
         verify(historyRepository, times(1)).findRejectionTransitions();
     }
 
@@ -262,7 +262,7 @@ class WorkflowHistoryServiceTest {
                 .id(historyId)
                 .expenseId(expenseId)
                 .fromStatus(null)
-                .toStatus(toStatus)
+                .toStatus(toStatus.name())
                 .actorId(actorId)
                 .comment(comment)
                 .timestamp(Instant.now())
@@ -277,7 +277,7 @@ class WorkflowHistoryServiceTest {
         // Assert
         assertThat(result).isNotNull();
         assertThat(result.getFromStatus()).isNull();
-        assertThat(result.getToStatus()).isEqualTo(toStatus);
+        assertThat(result.getToStatus()).isEqualTo(toStatus.name());
         verify(historyRepository, times(1)).save(any(WorkflowHistory.class));
     }
 
@@ -300,8 +300,8 @@ class WorkflowHistoryServiceTest {
         WorkflowHistoryDto dtoWithoutComment = WorkflowHistoryDto.builder()
                 .id(historyId)
                 .expenseId(expenseId)
-                .fromStatus(fromStatus)
-                .toStatus(toStatus)
+                .fromStatus(fromStatus.name())
+                .toStatus(toStatus.name())
                 .actorId(actorId)
                 .comment(null)
                 .timestamp(Instant.now())
