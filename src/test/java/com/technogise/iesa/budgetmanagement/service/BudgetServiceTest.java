@@ -263,7 +263,7 @@ class BudgetServiceTest {
         // Arrange
         when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
-        when(budgetRepository.existsByNameAndPeriod(anyString(), any(), any())).thenReturn(false);
+        when(budgetRepository.existsByNameAndPeriod(anyString(), any(), any(), any())).thenReturn(false);
         when(budgetRepository.save(any(Budget.class))).thenReturn(budget);
         when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
 
@@ -284,7 +284,7 @@ class BudgetServiceTest {
         // Arrange
         when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
         when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
-        when(budgetRepository.existsByNameAndPeriod(anyString(), any(), any())).thenReturn(true);
+        when(budgetRepository.existsByNameAndPeriod(anyString(), any(), any(), any())).thenReturn(true);
 
         // Act & Assert
         assertThatThrownBy(() -> budgetService.createBudget(createRequest))
@@ -453,7 +453,7 @@ class BudgetServiceTest {
     @Test
     void checkBudgetAvailability_WhenInsufficientBudget_ShouldReturnFalse() {
         // Arrange
-        BigDecimal requestedAmount = new BigDecimal("30000.00"));
+        BigDecimal requestedAmount = new BigDecimal("30000.00");
         when(budgetRepository.findById(budgetId)).thenReturn(Optional.of(budget));
 
         // Act
