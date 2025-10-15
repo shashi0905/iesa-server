@@ -167,6 +167,7 @@ class SegmentServiceTest {
     void createSegment_WithValidData_ShouldCreateSuccessfully() {
         // Arrange
         when(segmentRepository.existsByCode("ENG-001")).thenReturn(false);
+        when(segmentMapper.toEntity(createRequest)).thenReturn(segment);
         when(segmentRepository.save(any(Segment.class))).thenReturn(segment);
         when(segmentMapper.toDto(segment)).thenReturn(segmentDto);
 
@@ -178,6 +179,7 @@ class SegmentServiceTest {
         assertThat(result.getName()).isEqualTo("Engineering");
         assertThat(result.getCode()).isEqualTo("ENG-001");
         verify(segmentRepository, times(1)).existsByCode("ENG-001");
+        verify(segmentMapper, times(1)).toEntity(createRequest);
         verify(segmentRepository, times(1)).save(any(Segment.class));
     }
 
