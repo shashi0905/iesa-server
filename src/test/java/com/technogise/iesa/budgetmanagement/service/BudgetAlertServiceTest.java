@@ -101,9 +101,10 @@ class BudgetAlertServiceTest {
     void getAllAlerts_ShouldReturnAllAlerts() {
         // Arrange
         List<BudgetAlert> alerts = Arrays.asList(alert);
+        List<BudgetAlertDto> alertDtos = Arrays.asList(alertDto);
 
         when(alertRepository.findAll()).thenReturn(alerts);
-        when(budgetMapper.toDto(alert)).thenReturn(alertDto);
+        when(budgetMapper.toAlertDtoList(alerts)).thenReturn(alertDtos);
 
         // Act
         List<BudgetAlertDto> result = alertService.getAllAlerts();
@@ -112,7 +113,7 @@ class BudgetAlertServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getMessage()).contains("80.0%");
         verify(alertRepository, times(1)).findAll();
-        verify(budgetMapper, times(1)).toDto(alert);
+        verify(budgetMapper, times(1)).toAlertDtoList(alerts);
     }
 
     @Test
@@ -148,9 +149,10 @@ class BudgetAlertServiceTest {
     void getAlertsByBudget_ShouldReturnAlertsForBudget() {
         // Arrange
         List<BudgetAlert> alerts = Arrays.asList(alert);
+        List<BudgetAlertDto> alertDtos = Arrays.asList(alertDto);
 
         when(alertRepository.findByBudgetId(budgetId)).thenReturn(alerts);
-        when(budgetMapper.toDto(alert)).thenReturn(alertDto);
+        when(budgetMapper.toAlertDtoList(alerts)).thenReturn(alertDtos);
 
         // Act
         List<BudgetAlertDto> result = alertService.getAlertsByBudget(budgetId);
@@ -159,15 +161,17 @@ class BudgetAlertServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getBudgetId()).isEqualTo(budgetId);
         verify(alertRepository, times(1)).findByBudgetId(budgetId);
+        verify(budgetMapper, times(1)).toAlertDtoList(alerts);
     }
 
     @Test
     void getUnacknowledgedAlerts_ShouldReturnOnlyUnacknowledgedAlerts() {
         // Arrange
         List<BudgetAlert> alerts = Arrays.asList(alert);
+        List<BudgetAlertDto> alertDtos = Arrays.asList(alertDto);
 
         when(alertRepository.findByIsAcknowledged(false)).thenReturn(alerts);
-        when(budgetMapper.toDto(alert)).thenReturn(alertDto);
+        when(budgetMapper.toAlertDtoList(alerts)).thenReturn(alertDtos);
 
         // Act
         List<BudgetAlertDto> result = alertService.getUnacknowledgedAlerts();
@@ -176,6 +180,7 @@ class BudgetAlertServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getIsAcknowledged()).isFalse();
         verify(alertRepository, times(1)).findByIsAcknowledged(false);
+        verify(budgetMapper, times(1)).toAlertDtoList(alerts);
     }
 
     @Test
@@ -183,9 +188,10 @@ class BudgetAlertServiceTest {
         // Arrange
         int days = 7;
         List<BudgetAlert> alerts = Arrays.asList(alert);
+        List<BudgetAlertDto> alertDtos = Arrays.asList(alertDto);
 
         when(alertRepository.findRecentAlerts(any(Instant.class))).thenReturn(alerts);
-        when(budgetMapper.toDto(alert)).thenReturn(alertDto);
+        when(budgetMapper.toAlertDtoList(alerts)).thenReturn(alertDtos);
 
         // Act
         List<BudgetAlertDto> result = alertService.getRecentAlerts(days);
@@ -193,6 +199,7 @@ class BudgetAlertServiceTest {
         // Assert
         assertThat(result).hasSize(1);
         verify(alertRepository, times(1)).findRecentAlerts(any(Instant.class));
+        verify(budgetMapper, times(1)).toAlertDtoList(alerts);
     }
 
     @Test
@@ -203,11 +210,11 @@ class BudgetAlertServiceTest {
         when(budgetMapper.toDto(alert)).thenReturn(alertDto);
 
         // Act
-        BudgetAlertDto result = alertService.createAlert(thresholdId, "Budget threshold reached");
+        BudgetAlertDto result = alertService.createAlert(thresholdId, "Budget threshold of 80.0% has been reached");
 
         // Assert
         assertThat(result).isNotNull();
-        assertThat(result.getMessage()).contains("Budget threshold reached");
+        assertThat(result.getMessage()).contains("80.0%");
         verify(thresholdRepository, times(1)).findById(thresholdId);
         verify(alertRepository, times(1)).save(any(BudgetAlert.class));
     }
