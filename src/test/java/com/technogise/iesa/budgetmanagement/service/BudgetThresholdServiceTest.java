@@ -115,9 +115,10 @@ class BudgetThresholdServiceTest {
     void getAllThresholds_ShouldReturnAllThresholds() {
         // Arrange
         List<BudgetThreshold> thresholds = Arrays.asList(threshold);
+        List<BudgetThresholdDto> thresholdDtos = Arrays.asList(thresholdDto);
 
         when(thresholdRepository.findAll()).thenReturn(thresholds);
-        when(budgetMapper.toDto(threshold)).thenReturn(thresholdDto);
+        when(budgetMapper.toThresholdDtoList(thresholds)).thenReturn(thresholdDtos);
 
         // Act
         List<BudgetThresholdDto> result = thresholdService.getAllThresholds();
@@ -126,7 +127,7 @@ class BudgetThresholdServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getPercentage()).isEqualByComparingTo(new BigDecimal("80.0"));
         verify(thresholdRepository, times(1)).findAll();
-        verify(budgetMapper, times(1)).toDto(threshold);
+        verify(budgetMapper, times(1)).toThresholdDtoList(thresholds);
     }
 
     @Test
@@ -163,9 +164,10 @@ class BudgetThresholdServiceTest {
     void getThresholdsByBudget_ShouldReturnThresholdsForBudget() {
         // Arrange
         List<BudgetThreshold> thresholds = Arrays.asList(threshold);
+        List<BudgetThresholdDto> thresholdDtos = Arrays.asList(thresholdDto);
 
         when(thresholdRepository.findByBudgetId(budgetId)).thenReturn(thresholds);
-        when(budgetMapper.toDto(threshold)).thenReturn(thresholdDto);
+        when(budgetMapper.toThresholdDtoList(thresholds)).thenReturn(thresholdDtos);
 
         // Act
         List<BudgetThresholdDto> result = thresholdService.getThresholdsByBudget(budgetId);
@@ -174,15 +176,17 @@ class BudgetThresholdServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getBudgetId()).isEqualTo(budgetId);
         verify(thresholdRepository, times(1)).findByBudgetId(budgetId);
+        verify(budgetMapper, times(1)).toThresholdDtoList(thresholds);
     }
 
     @Test
     void getEnabledThresholds_ShouldReturnOnlyEnabledThresholds() {
         // Arrange
         List<BudgetThreshold> thresholds = Arrays.asList(threshold);
+        List<BudgetThresholdDto> thresholdDtos = Arrays.asList(thresholdDto);
 
         when(thresholdRepository.findByAlertEnabled(true)).thenReturn(thresholds);
-        when(budgetMapper.toDto(threshold)).thenReturn(thresholdDto);
+        when(budgetMapper.toThresholdDtoList(thresholds)).thenReturn(thresholdDtos);
 
         // Act
         List<BudgetThresholdDto> result = thresholdService.getEnabledThresholds();
@@ -191,6 +195,7 @@ class BudgetThresholdServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getAlertEnabled()).isTrue();
         verify(thresholdRepository, times(1)).findByAlertEnabled(true);
+        verify(budgetMapper, times(1)).toThresholdDtoList(thresholds);
     }
 
     @Test
@@ -236,8 +241,6 @@ class BudgetThresholdServiceTest {
                 .alertEnabled(true)
                 .notificationRecipientIds(Collections.singletonList(userId))
                 .build();
-
-        when(budgetRepository.findById(budgetId)).thenReturn(Optional.of(budget));
 
         // Act & Assert
         assertThatThrownBy(() -> thresholdService.createThreshold(invalidRequest))

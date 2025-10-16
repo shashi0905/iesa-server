@@ -128,9 +128,10 @@ class BudgetServiceTest {
     void getAllBudgets_ShouldReturnAllBudgets() {
         // Arrange
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findAllNotDeleted()).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getAllBudgets();
@@ -139,16 +140,17 @@ class BudgetServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getName()).isEqualTo("Q1 Marketing Budget");
         verify(budgetRepository, times(1)).findAllNotDeleted();
-        verify(budgetMapper, times(1)).toDto(budget);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
     void getAllActiveBudgets_ShouldReturnOnlyActiveBudgets() {
         // Arrange
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findAllActive()).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getAllActiveBudgets();
@@ -157,7 +159,7 @@ class BudgetServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getIsActive()).isTrue();
         verify(budgetRepository, times(1)).findAllActive();
-        verify(budgetMapper, times(1)).toDto(budget);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
@@ -194,9 +196,10 @@ class BudgetServiceTest {
     void getBudgetsBySegment_ShouldReturnBudgetsForSegment() {
         // Arrange
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findBySegmentId(segmentId)).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getBudgetsBySegment(segmentId);
@@ -205,15 +208,17 @@ class BudgetServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getSegmentId()).isEqualTo(segmentId);
         verify(budgetRepository, times(1)).findBySegmentId(segmentId);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
     void getBudgetsByDepartment_ShouldReturnBudgetsForDepartment() {
         // Arrange
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findByDepartmentId(departmentId)).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getBudgetsByDepartment(departmentId);
@@ -222,15 +227,17 @@ class BudgetServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getDepartmentId()).isEqualTo(departmentId);
         verify(budgetRepository, times(1)).findByDepartmentId(departmentId);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
     void getBudgetsByPeriod_ShouldReturnBudgetsForPeriod() {
         // Arrange
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findByPeriod(BudgetPeriod.QUARTERLY)).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getBudgetsByPeriod(BudgetPeriod.QUARTERLY);
@@ -239,6 +246,7 @@ class BudgetServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getPeriod()).isEqualTo(BudgetPeriod.QUARTERLY.name());
         verify(budgetRepository, times(1)).findByPeriod(BudgetPeriod.QUARTERLY);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
@@ -246,9 +254,10 @@ class BudgetServiceTest {
         // Arrange
         LocalDate currentDate = LocalDate.now();
         List<Budget> budgets = Arrays.asList(budget);
+        List<BudgetDto> budgetDtos = Arrays.asList(budgetDto);
 
         when(budgetRepository.findCurrentBudgets(currentDate)).thenReturn(budgets);
-        when(budgetMapper.toDto(budget)).thenReturn(budgetDto);
+        when(budgetMapper.toDtoList(budgets)).thenReturn(budgetDtos);
 
         // Act
         List<BudgetDto> result = budgetService.getCurrentBudgets();
@@ -256,6 +265,7 @@ class BudgetServiceTest {
         // Assert
         assertThat(result).hasSize(1);
         verify(budgetRepository, times(1)).findCurrentBudgets(currentDate);
+        verify(budgetMapper, times(1)).toDtoList(budgets);
     }
 
     @Test
@@ -282,8 +292,6 @@ class BudgetServiceTest {
     @Test
     void createBudget_WithDuplicateBudget_ShouldThrowException() {
         // Arrange
-        when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
-        when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
         when(budgetRepository.existsByNameAndPeriod(anyString(), any(), any(), any())).thenReturn(true);
 
         // Act & Assert
@@ -306,9 +314,6 @@ class BudgetServiceTest {
                 .endDate(LocalDate.of(2025, 1, 1))
                 .allocatedAmount(new BigDecimal("50000.00"))
                 .build();
-
-        when(segmentRepository.findById(segmentId)).thenReturn(Optional.of(segment));
-        when(departmentRepository.findById(departmentId)).thenReturn(Optional.of(department));
 
         // Act & Assert
         assertThatThrownBy(() -> budgetService.createBudget(invalidRequest))

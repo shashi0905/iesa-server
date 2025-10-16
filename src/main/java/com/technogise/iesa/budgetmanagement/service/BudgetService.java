@@ -87,8 +87,9 @@ public class BudgetService {
 
     public BudgetDto createBudget(CreateBudgetRequest request) {
         // Validate dates
-        if (request.getEndDate().isBefore(request.getStartDate())) {
-            throw new IllegalArgumentException("End date must be after start date");
+        if (request.getEndDate().isBefore(request.getStartDate()) ||
+            request.getEndDate().isEqual(request.getStartDate())) {
+            throw new IllegalArgumentException("Start date must be before end date");
         }
 
         // Check for duplicate budget
@@ -145,8 +146,9 @@ public class BudgetService {
         }
 
         // Validate dates if both are set
-        if (budget.getEndDate().isBefore(budget.getStartDate())) {
-            throw new IllegalArgumentException("End date must be after start date");
+        if (budget.getEndDate().isBefore(budget.getStartDate()) ||
+            budget.getEndDate().isEqual(budget.getStartDate())) {
+            throw new IllegalArgumentException("Start date must be before end date");
         }
 
         Budget updatedBudget = budgetRepository.save(budget);
