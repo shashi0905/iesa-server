@@ -1,6 +1,6 @@
 package com.technogise.iesa.budgetmanagement.domain;
 
-import com.technogise.iesa.departmentmanagement.domain.Department;
+import com.technogise.iesa.usermanagement.domain.Department;
 import com.technogise.iesa.segmentmanagement.domain.Segment;
 import jakarta.persistence.*;
 import lombok.*;

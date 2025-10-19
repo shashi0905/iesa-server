@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/budget-alerts")
+@RequestMapping("/api/v1/budget-alerts")
 @RequiredArgsConstructor
 public class BudgetAlertController {
 
