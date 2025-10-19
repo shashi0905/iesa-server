@@ -1,5 +1,6 @@
 package com.technogise.iesa.usermanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,10 +34,18 @@ public class UserDto {
     private Instant updatedAt;
 
     /**
-     * Get full name
+     * Get full name (computed property)
      */
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    /**
+     * Dummy setter for Jackson deserialization (e.g., from Redis cache)
+     * Does nothing as fullName is computed from firstName + lastName
+     */
+    public void setFullName(String fullName) {
+        // Intentionally empty - fullName is a computed property
     }
 
 }
