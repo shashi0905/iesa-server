@@ -136,7 +136,7 @@ SELECT
     'SUBMITTED',
     alice.id,
     'Submitted for approval',
-    '2025-10-02 09:00:00'
+    TIMESTAMP '2025-10-02 09:00:00'
 FROM expense1, alice
 UNION ALL
 SELECT
@@ -146,7 +146,7 @@ SELECT
     'APPROVED',
     john_manager.id,
     'Approved - necessary for development work',
-    '2025-10-03 10:30:00'
+    TIMESTAMP '2025-10-03 10:30:00'
 FROM expense1, john_manager;
 
 -- History for Expense 2 (Bob's conference - SUBMITTED)
@@ -161,7 +161,7 @@ SELECT
     'SUBMITTED',
     bob.id,
     'Submitted for approval',
-    '2025-10-06 14:20:00'
+    TIMESTAMP '2025-10-06 14:20:00'
 FROM expense2, bob;
 
 -- History for Expense 3 (Jane's marketing - APPROVED)
@@ -177,7 +177,7 @@ SELECT
     'SUBMITTED',
     jane.id,
     'Submitted for approval',
-    '2025-09-29 11:00:00'
+    TIMESTAMP '2025-09-29 11:00:00'
 FROM expense3, jane
 UNION ALL
 SELECT
@@ -187,7 +187,7 @@ SELECT
     'APPROVED',
     admin_user.id,
     'Approved for Q1 campaign',
-    '2025-09-30 09:15:00'
+    TIMESTAMP '2025-09-30 09:15:00'
 FROM expense3, admin_user;
 
 -- History for Expense 5 (John's lunch - REJECTED)
@@ -203,7 +203,7 @@ SELECT
     'SUBMITTED',
     john.id,
     'Submitted for approval',
-    '2025-10-09 13:00:00'
+    TIMESTAMP '2025-10-09 13:00:00'
 FROM expense5, john
 UNION ALL
 SELECT
@@ -213,7 +213,7 @@ SELECT
     'REJECTED',
     admin_user.id,
     'Please allocate to department budget instead of project budget',
-    '2025-10-09 15:30:00'
+    TIMESTAMP '2025-10-09 15:30:00'
 FROM expense5, admin_user;
 
 -- Insert sample comments
@@ -229,7 +229,7 @@ SELECT
     john_manager.id,
     'Can you provide more details about the conference agenda?',
     false,
-    '2025-10-07 09:00:00'
+    TIMESTAMP '2025-10-07 09:00:00'
 FROM expense2, john_manager
 UNION ALL
 SELECT
@@ -238,7 +238,7 @@ SELECT
     bob.id,
     'The conference covers advanced React patterns, state management, and performance optimization. It will help with the IESA frontend development.',
     false,
-    '2025-10-07 10:30:00'
+    TIMESTAMP '2025-10-07 10:30:00'
 FROM expense2, bob;
 
 -- Internal comment from manager
@@ -252,7 +252,7 @@ SELECT
     john_manager.id,
     'Looks good, will approve after checking budget allocation',
     true,
-    '2025-10-07 11:00:00'
+    TIMESTAMP '2025-10-07 11:00:00'
 FROM expense2, john_manager;
 
 -- Insert sample approval actions
@@ -273,7 +273,7 @@ SELECT
     john_manager.id,
     'APPROVED',
     'Approved - necessary for development work',
-    '2025-10-03 10:30:00'
+    TIMESTAMP '2025-10-03 10:30:00'
 FROM expense1, john_manager, manager_step;
 
 -- Approval action for Expense 3
@@ -293,7 +293,7 @@ SELECT
     admin_user.id,
     'APPROVED',
     'Approved for Q1 campaign',
-    '2025-09-30 09:15:00'
+    TIMESTAMP '2025-09-30 09:15:00'
 FROM expense3, admin_user, finance_step;
 
 -- Rejection action for Expense 5
@@ -313,5 +313,5 @@ SELECT
     admin_user.id,
     'REJECTED',
     'Please allocate to department budget instead of project budget',
-    '2025-10-09 15:30:00'
+    TIMESTAMP '2025-10-09 15:30:00'
 FROM expense5, admin_user, finance_step;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/budget-thresholds")
+@RequestMapping("/api/v1/budget-thresholds")
 @RequiredArgsConstructor
 public class BudgetThresholdController {
 
